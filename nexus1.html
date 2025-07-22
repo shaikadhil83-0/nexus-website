@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Gaming - Next Gen Console Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Russo+One&display=swap');
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #00ff9d;
+            --neon-purple: #bd00ff;
+            --dark-bg: #0f0f1a;
+            --glass-bg: rgba(255, 255, 255, 0.08); /* Lighter for glass effect */
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            font-family: 'Russo One', sans-serif;
+            background-color: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .pixel-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .neon-text {
+            text-shadow: 0 0 5px var(--neon-pink),
+                         0 0 10px var(--neon-pink),
+                         0 0 20px var(--neon-pink);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f0f1a 0%, #1e1e3a 100%);
+        }
+
+        .btn-neon {
+            background: transparent;
+            color: white;
+            border: 2px solid var(--neon-blue);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .btn-neon:hover {
+            background: var(--neon-blue);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .news-ticker {
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 240, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+        }
+
+        .console-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .comparison-cell {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #2d2d4a;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--neon-green);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .ar-overlay {
+            background: rgba(15, 15, 26, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Glassmorphism Search Bar */
+        .glass-search-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            border-radius: 9999px; /* For full rounded corners */
+        }
+
+        .glass-search-bar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 240, 255, 0.1) 0%, /* neon-blue */
+                rgba(255, 0, 255, 0.1) 25%, /* neon-pink */
+                rgba(0, 255, 157, 0.1) 50%, /* neon-green */
+                rgba(189, 0, 255, 0.1) 75%, /* neon-purple */
+                rgba(0, 240, 255, 0.1) 100%
+            );
+            animation: move-gradient 10s linear infinite;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        @keyframes move-gradient {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50%, -50%); }
+        }
+
+        .glass-search-bar input {
+            background: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        .glass-search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 100; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e1e3a 0%, #0f0f1a 100%);
+            margin: auto;
+            padding: 20px;
+            border: 1px solid var(--neon-blue);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px var(--neon-blue);
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .payment-option {
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .payment-option:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            background-color: rgba(0, 240, 255, 0.05);
+        }
+        .payment-option.selected {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+            background-color: rgba(0, 255, 157, 0.1);
+        }
+        .payment-option img {
+            max-height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="gradient-bg border-b border-gray-800 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold neon-text text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple pixel-font">NEXUS</span>
+                <span class="ml-4 hidden md:flex space-x-6">
+                    <a href="#home" class="hover:text-neon-blue">Home</a>
+                    <a href="#shop" class="hover:text-neon-blue">Shop</a>
+                    <a href="#compare" class="hover:text-neon-blue">Compare</a>
+                    <a href="#bundles" class="hover:text-neon-blue">Bundles</a>
+                    <a href="#collectors" class="hover:text-neon-blue">Collector's Corner</a>
+                    <a href="#community" class="hover:text-neon-blue">Community</a>
+                </span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="search-toggle-btn" class="p-2 rounded-full hover:bg-gray-800">
+                        <i class="fas fa-search text-neon-blue"></i>
+                    </button>
+                    <div id="search-bar-container" class="absolute right-0 top-1/2 -translate-y-1/2 hidden md:block">
+                        <div class="glass-search-bar flex items-center px-4 py-2 w-72">
+                            <input type="text" placeholder="Search consoles, games..." class="flex-grow outline-none text-white text-sm pr-2">
+                            <i class="fas fa-search text-neon-blue"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="cart-button" class="p-2 rounded-full hover:bg-gray-800 relative">
+                    <i class="fas fa-shopping-cart text-neon-blue"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-neon-pink text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <button class="p-2 rounded-full hover:bg-gray-800">
+                    <i class="fas fa-user text-neon-blue"></i>
+                </button>
+                <button class="md:hidden p-2 rounded-full hover:bg-gray-800">
+                    <i class="fas fa-bars text-neon-blue"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-cart-modal">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 text-neon-blue">Your Cart</h2>
+            <div id="cart-items" class="space-y-4 mb-6">
+                <p id="empty-cart-message" class="text-gray-400">Your cart is empty.</p>
+            </div>
+            <div class="flex justify-between items-center border-t border-gray-700 pt-4">
+                <span class="text-xl font-bold">Total: $<span id="cart-total">0.00</span></span>
+                <button id="checkout-button" class="btn-neon px-6 py-3 rounded-full font-bold">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-payment-modal">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 text-neon-blue">Select Payment Method</h2>
+            <div class="space-y-4 mb-6">
+                <div class="payment-option" data-method="paypal">
+                    <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-mark-color.svg" alt="PayPal">
+                    <span>PayPal</span>
+                </div>
+                <div class="payment-option" data-method="credit-card">
+                    <i class="fas fa-credit-card text-4xl text-blue-400"></i>
+                    <span>Credit / Debit Card</span>
+                </div>
+                <div class="payment-option" data-method="credy">
+                    <img src="credy.jpg" alt="Credy Logo" class="rounded-full">
+                    <span>Credy Pay</span>
+                </div>
+            </div>
+            <div class="text-center">
+                <button id="confirm-payment-button" class="btn-neon px-6 py-3 rounded-full font-bold w-full" disabled>Confirm Payment</button>
+            </div>
+        </div>
+    </div>
+
+
+    <section id="home" class="relative overflow-hidden">
+        <div class="relative h-96 md:h-screen max-h-screen flex items-center">
+            <img src="banner(god of war).png" alt="Ultimate gaming setup with multiple next-gen consoles, gaming monitor with vibrant colors and LED lighting" class="absolute inset-0 w-full h-full object-cover opacity-70"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+            <div class="container mx-auto px-4 relative z-10">
+                <h1 class="text-4xl md:text-7xl font-bold mb-4 text-neon-blue">NEXT GEN CONSOLES</h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-2xl">Experience gaming like never before with our latest collection of consoles and exclusive bundles.</p>
+                <div class="flex flex-wrap gap-4">
+                    <button class="btn-neon px-6 py-3 rounded-full font-bold">Shop Now</button>
+                    <button class="bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-gray-200">Compare Consoles</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-black py-3 overflow-hidden">
+            <div class="flex items-center">
+                <span class="bg-neon-pink text-black px-4 py-1 font-bold mr-4">LATEST</span>
+                <div class="news-ticker whitespace-nowrap flex items-center">
+                    <span class="inline-block mr-8">PREORDERS NOW OPEN FOR LIMITED EDITION STEAM DECK OLED</span>
+                    <span class="inline-block mr-8">PLAYSTATION 5 PRO RUMORED TO LAUNCH Q4 2024</span>
+                    <span class="inline-block mr-8">NEW XBOX SERIES X BUNDLE WITH STARFIELD NOW AVAILABLE</span>
+                    <span class="inline-block mr-8">NINTENDO SWITCH 2 OFFICIALLY ANNOUNCED</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-gradient-to-b from-black to-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold mb-8 text-center">Trending Now</h2>
+
+            <div class="relative overflow-hidden h-96 md:h-[500px] rounded-xl">
+                <div class="absolute inset-0 flex transition-transform duration-500" id="carousel-track">
+                    <div class="carousel-slide flex-shrink-0 w-full h-full">
+                        <div class="relative w-full h-full">
+                            <img src="ps5 slim edition.jpg" alt="PlayStation 5 Slim bundle with Marvel's Spider-Man 2 and red DualSense controller" class="w-full h-full object-cover opacity-80"/>
+                            <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-8">
+                                <span class="bg-neon-blue text-black px-3 py-1 text-sm font-bold mb-2 inline-block">FEATURED</span>
+                                <h3 class="text-3xl font-bold mb-2">PlayStation 5 Slim Bundle</h3>
+                                <p class="mb-4">Includes Marvel's Spider-Man 2 and limited edition controller</p>
+                                <button class="btn-neon px-4 py-2 rounded-full">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide flex-shrink-0 w-full h-full">
+                        <div class="relative w-full h-full">
+                            <img src="xbox x hd.webp" alt="Xbox Series X console with Starfield limited edition packaging" class="w-full h-full object-cover opacity-80"/>
+                            <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-8">
+                                <span class="bg-neon-green text-black px-3 py-1 text-sm font-bold mb-2 inline-block">LIMITED STOCK</span>
+                                <h3 class="text-3xl font-bold mb-2">Xbox Series X Starfield Edition</h3>
+                                <p class="mb-4">Special edition console with custom Starfield artwork</p>
+                                <button class="btn-neon px-4 py-2 rounded-full">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide flex-shrink-0 w-full h-full">
+                        <div class="relative w-full h-full">
+                            <img src="nintendo-switch-2-max.webp" alt="Nintendo Switch OLED Model with Legend of Zelda: Tears of the Kingdom special edition" class="w-full h-full object-cover opacity-80"/>
+                            <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-8">
+                                <span class="bg-neon-purple text-black px-3 py-1 text-sm font-bold mb-2 inline-block">COMMUNITY PICK</span>
+                                <h3 class="text-3xl font-bold mb-2">Zelda: Tears of the Kingdom Bundle</h3>
+                                <p class="mb-4">OLED Model with exclusive Zelda artwork</p>
+                                <button class="btn-neon px-4 py-2 rounded-full">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                         <div class="carousel-slide flex-shrink-0 w-full h-full">
+                        <div class="relative w-full h-full">
+                            <img src="nintendo-switch-2-max.webp" alt="Nintendo Switch OLED Model with Legend of Zelda: Tears of the Kingdom special edition" class="w-full h-full object-cover opacity-80"/>
+                            <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-8">
+                                <span class="bg-neon-purple text-black px-3 py-1 text-sm font-bold mb-2 inline-block">COMMUNITY PICK</span>
+                                <h3 class="text-3xl font-bold mb-2">Zelda: Tears of the Kingdom Bundle</h3>
+                                <p class="mb-4">OLED Model with exclusive Zelda artwork</p>
+                                <button class="btn-neon px-4 py-2 rounded-full">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="prev-btn" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 rounded-full p-3">
+                    <i class="fas fa-chevron-left text-neon-blue"></i>
+                </button>
+                <button id="next-btn" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 rounded-full p-3">
+                    <i class="fas fa-chevron-right text-neon-blue"></i>
+                </button>
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+                    <button class="w-3 h-3 rounded-full bg-neon-blue carousel-indicator"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-600 carousel-indicator"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-600 carousel-indicator"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 bg-gray1-900">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <a href="#shop" class="bg-gray-800 hover:bg-gray-700 rounded-lg p-6 text-center transition-all duration-300">
+                    <div class="bg-neon-blue rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-gamepad text-2xl text-black"></i>
+                    </div>
+                    <h3 class="font-bold">Shop Consoles</h3>
+                </a>
+                <a href="#compare" class="bg-gray-800 hover:bg-gray-700 rounded-lg p-6 text-center transition-all duration-300">
+                    <div class="bg-neon-pink rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-balance-scale text-2xl text-black"></i>
+                    </div>
+                    <h3 class="font-bold">Compare</h3>
+                </a>
+                <a href="#bundles" class="bg-gray-800 hover:bg-gray-700 rounded-lg p-6 text-center transition-all duration-300">
+                    <div class="bg-neon-green rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-box-open text-2xl text-black"></i>
+                    </div>
+                    <h3 class="font-bold">Bundles</h3>
+                </a>
+                <a href="#collectors" class="bg-gray-800 hover:bg-gray-700 rounded-lg p-6 text-center transition-all duration-300">
+                    <div class="bg-neon-purple rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-crown text-2xl text-black"></i>
+                    </div>
+                    <h3 class="font-bold">Collector's Corner</h3>
+                </a>
+                <a href="#community" class="bg-gray-800 hover:bg-gray-700 rounded-lg p-6 text-center transition-all duration-300">
+                    <div class="bg-yellow-400 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-users text-2xl text-black"></i>
+                    </div>
+                    <h3 class="font-bold">Community</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="shop" class="py-16 gradient-bg">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Shop Gaming Consoles</h2>
+
+            <div class="mb-8 flex flex-wrap justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="font-bold mr-2">Filter By:</span>
+                    <button class="bg-neon-blue text-black px-3 py-1 rounded-full text-sm font-bold mr-2 mb-2">All</button>
+                    <button class="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-sm font-bold mr-2 mb-2">PlayStation</button>
+                    <button class="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-sm font-bold mr-2 mb-2">Xbox</button>
+                    <button class="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-sm font-bold mr-2 mb-2">Nintendo</button>
+                    <button class="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-sm font-bold mr-2 mb-2">Handhelds</button>
+                    <button class="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-sm font-bold mb-2">Bundles</button>
+                </div>
+                <div>
+                    <select class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1">
+                        <option>Sort by: Featured</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Top Rated</option>
+                        <option>Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="console-card bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="ps5 slim edition.jpg" alt="PlayStation 5 Standard Edition with white DualSense controller" class="w-full h-48 object-cover"/>
+                        <span class="featured-badge">BEST SELLER</span>
+                        <button class="absolute top-2 left-2 bg-black/50 hover:bg-black/80 rounded-full p-2">
+                            <i class="fas fa-heart text-neon-pink"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">PlayStation 5 Standard Edition</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-400 ml-2 text-sm">(421 reviews)</span>
+                        </div>
+                        <p class="text-gray-300 mb-4">Experience lightning-fast loading with an ultra-high speed SSD, deeper immersion with support for haptic feedback, adaptive triggers and 3D Audio.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">$499.99</span>
+                            <div class="flex space-x-2">
+                                <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded-full compare-btn" data-console-id="ps5">
+                                    <i class="fas fa-balance-scale-left text-neon-blue"></i>
+                                </button>
+                                <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="ps5" data-console-name="PlayStation 5 Standard Edition" data-console-price="499.99">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="console-card bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="xbox x hd.webp" alt="Xbox Series X console with black controller standing vertically" class="w-full h-48 object-cover"/>
+                        <span class="featured-badge pulse">LIMITED STOCK</span>
+                        <button class="absolute top-2 left-2 bg-black/50 hover:bg-black/80 rounded-full p-2">
+                            <i class="far fa-heart text-white"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Xbox Series X</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-gray-400 ml-2 text-sm">(387 reviews)</span>
+                        </div>
+                        <p class="text-gray-300 mb-4">Experience next-gen speed and performance with the Xbox Series X, featuring true 4K gaming, higher frame rates, and quicker load times.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">$499.99</span>
+                            <div class="flex space-x-2">
+                                <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded-full compare-btn" data-console-id="xboxsx">
+                                    <i class="fas fa-balance-scale-left text-neon-blue"></i>
+                                </button>
+                                <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="xboxsx" data-console-name="Xbox Series X" data-console-price="499.99">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="console-card bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="nintendo-switch-2-max.webp" alt="Nintendo Switch OLED Model with neon red and blue Joy-Con controllers" class="w-full h-48 object-cover"/>
+                        <button class="absolute top-2 left-2 bg-black/50 hover:bg-black/80 rounded-full p-2">
+                            <i class="far fa-heart text-white"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Nintendo Switch OLED Model</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-400 ml-2 text-sm">(512 reviews)</span>
+                        </div>
+                        <p class="text-gray-300 mb-4">The new OLED screen makes games pop with vibrant colors and sharp contrast. Includes a wide adjustable stand for tabletop mode.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">$349.99</span>
+                            <div class="flex space-x-2">
+                                <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded-full compare-btn" data-console-id="switch">
+                                    <i class="fas fa-balance-scale-left text-neon-blue"></i>
+                                </button>
+                                <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="switch" data-console-name="Nintendo Switch OLED Model" data-console-price="349.99">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button class="btn-neon px-6 py-3 rounded-full font-bold">View All Consoles</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="compare" class="py-16 bg-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-2 text-center">Console Comparison Tool</h2>
+            <p class="text-center text-gray-400 mb-8">Select up to 4 consoles to compare features side by side</p>
+
+            <div class="bg-gray-900 rounded-xl p-6 mb-8">
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <div class="flex-1 min-w-[200px] max-w-[300px]">
+                        <select id="compare-select-1" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2">
+                            <option value="">Select First Console</option>
+                            <option value="ps5">PlayStation 5</option>
+                            <option value="xboxsx">Xbox Series X</option>
+                            <option value="switch">Nintendo Switch OLED</option>
+                            <option value="steamdeck">Steam Deck OLED</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px] max-w-[300px]">
+                        <select id="compare-select-2" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2">
+                            <option value="">Select Second Console</option>
+                            <option value="ps5">PlayStation 5</option>
+                            <option value="xboxsx">Xbox Series X</option>
+                            <option value="switch">Nintendo Switch OLED</option>
+                            <option value="steamdeck">Steam Deck OLED</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px] max-w-[300px]">
+                        <select id="compare-select-3" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2">
+                            <option value="">Select Third Console</option>
+                            <option value="ps5">PlayStation 5</option>
+                            <option value="xboxsx">Xbox Series X</option>
+                            <option value="switch">Nintendo Switch OLED</option>
+                            <option value="steamdeck">Steam Deck OLED</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px] max-w-[300px]">
+                        <select id="compare-select-4" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2">
+                            <option value="">Select Fourth Console</option>
+                            <option value="ps5">PlayStation 5</option>
+                            <option value="xboxsx">Xbox Series X</option>
+                            <option value="switch">Nintendo Switch OLED</option>
+                            <option value="steamdeck">Steam Deck OLED</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button id="compare-now-btn" class="btn-neon px-6 py-3 rounded-full font-bold">Compare Now</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="gradient-bg">
+                            <th class="p-4 text-left"></th>
+                            </tr>
+                    </thead>
+                    <tbody id="comparison-table-body">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="mt-8 flex flex-wrap justify-center gap-6">
+                <div class="p-4 bg-gray-900 rounded-lg max-w-xs">
+                    <div class="text-5xl text-neon-blue mb-2"><i class="fas fa-trophy"></i></div>
+                    <h3 class="font-bold mb-2">Best Performance</h3>
+                    <p class="text-sm text-gray-400">Xbox Series X has the most powerful hardware</p>
+                </div>
+                <div class="p-4 bg-gray-900 rounded-lg max-w-xs">
+                    <div class="text-5xl text-neon-pink mb-2"><i class="fas fa-gamepad"></i></div>
+                    <h3 class="font-bold mb-2">Best Exclusives</h3>
+                    <p class="text-sm text-gray-400">PlayStation 5 leads in exclusive titles</p>
+                </div>
+                <div class="p-4 bg-gray-900 rounded-lg max-w-xs">
+                    <div class="text-5xl text-neon-purple mb-2"><i class="fas fa-mobile-alt"></i></div>
+                    <h3 class="font-bold mb-2">Best Portability</h3>
+                    <p class="text-sm text-gray-400">Nintendo Switch is the only true hybrid</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="bundles" class="py-16 gradient-bg">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Featured Bundles</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="Horizon Forbidden West Bundle.png" alt="PlayStation 5 Horizon Forbidden West bundle with game and exclusive controller" class="w-full h-48 object-cover"/>
+                        <span class="featured-badge">LIMITED TIME</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Horizon Forbidden West Bundle</h3>
+                        <p class="text-gray-300 mb-4">Includes PS5 console, Horizon Forbidden West game, and limited edition Tallneck-themed controller.</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-400 line-through block">$599.99</span>
+                                <span class="font-bold text-xl text-neon-green">$549.99</span>
+                            </div>
+                            <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="ps5-horizon-bundle" data-console-name="Horizon Forbidden West Bundle" data-console-price="549.99">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="xbox unlimited bundle.png" alt="Xbox Series X Starfield Premium Edition bundle with game, console and controller" class="w-full h-48 object-cover"/>
+                        <span class="featured-badge bg-neon-pink">EXCLUSIVE</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Xbox Series X Starfield Premium Bundle</h3>
+                        <p class="text-gray-300 mb-4">Get the Xbox Series X console with Starfield Premium Edition and an exclusive Constellation controller.</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-xl">$599.99</span>
+                            </div>
+                            <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="xboxsx-starfield-bundle" data-console-name="Xbox Series X Starfield Bundle" data-console-price="599.99">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="mario.png" alt="Nintendo Switch OLED Mario Kart 8 Deluxe bundle with game and extra Joy-Cons" class="w-full h-48 object-cover"/>
+                        <span class="featured-badge bg-neon-blue">FAMILY FUN</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Nintendo Switch Mario Kart Bundle</h3>
+                        <p class="text-gray-300 mb-4">Includes Nintendo Switch OLED, Mario Kart 8 Deluxe, and an extra set of Joy-Con controllers.</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-400 line-through block">$449.99</span>
+                                <span class="font-bold text-xl text-neon-green">$419.99</span>
+                            </div>
+                            <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="switch-mariokart-bundle" data-console-name="Nintendo Switch Mario Kart Bundle" data-console-price="419.99">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="text-center mt-10">
+                <button class="btn-neon px-6 py-3 rounded-full font-bold">Explore All Bundles</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="collectors" class="py-16 bg-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Collector's Corner</h2>
+            <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto">Discover rare, limited edition, and retro consoles. Perfect for the ultimate gaming enthusiast and collector!</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="ps2.png" alt="Original PlayStation 2 console, still in box, rare collector's item" class="w-full h-48 object-cover"/>
+                        <span class="featured-badge bg-yellow-400 text-black">RARE FIND</span>
+                        <button class="absolute top-2 left-2 bg-black/50 hover:bg-black/80 rounded-full p-2">
+                            <i class="fas fa-heart text-neon-pink"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Original PlayStation 2 (Sealed)</h3>
+                        <p class="text-gray-300 mb-4">A brand new, sealed unit of the iconic PlayStation 2. A must-have for any serious collector.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">$999.99</span>
+                            <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="ps2-sealed" data-console-name="Original PlayStation 2 (Sealed)" data-console-price="999.99">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="xbox retro.png" alt="Original Xbox console, special edition with green translucent case" class="w-full h-48 object-cover"/>
+                        <span class="featured-badge bg-red-500 text-white">HISTORICAL</span>
+                        <button class="absolute top-2 left-2 bg-black/50 hover:bg-black/80 rounded-full p-2">
+                            <i class="far fa-heart text-white"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Original Xbox (Crystal Edition)</h3>
+                        <p class="text-gray-300 mb-4">Rare translucent green original Xbox console in excellent condition. A piece of gaming history.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">$749.99</span>
+                            <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="xbox-crystal" data-console-name="Original Xbox (Crystal Edition)" data-console-price="749.99">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="netido .png" alt="Nintendo 64 Ice Blue special edition console with matching controller" class="w-full h-48 object-cover"/>
+                        <button class="absolute top-2 left-2 bg-black/50 hover:bg-black/80 rounded-full p-2">
+                            <i class="far fa-heart text-white"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">Nintendo 64 (Ice Blue)</h3>
+                        <p class="text-gray-300 mb-4">The vibrant Ice Blue variant of the Nintendo 64. Fully tested and cleaned, ready for your retro setup.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">$399.99</span>
+                            <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="n64-iceblue" data-console-name="Nintendo 64 (Ice Blue)" data-console-price="399.99">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                            <div class="bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <div class="relative">
+                        <img src="ps4.jpg" alt="PlayStation 4" class="w-full h-48 object-cover"/>
+                        <button class="absolute top-2 left-2 bg-black/50 hover:bg-black/80 rounded-full p-2">
+                            <i class="far fa-heart text-white"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl mb-2">PlayStation 4</h3>
+                        <p class="text-gray-300 mb-4">The vibrant  variant of the PlayStation 4. Fully tested and cleaned, ready for your retro setup.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">$699.99</span>
+                            <button class="btn-neon px-4 py-2 rounded-full add-to-cart-btn" data-console-id="n64-iceblue" data-console-name="PlayStation limited" data-console-price="699.99">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div
+
+             class="text-center mt-10">
+                <button class="btn-neon px-6 py-3 rounded-full font-bold">View All Collector's Items</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 gradient-bg">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">See It In Your Space with AR!</h2>
+            <p class="text-gray-400 mb-8 max-w-xl mx-auto">Curious how that new console will look in your gaming setup? Use our augmented reality preview tool!</p>
+            <button class="bg-gradient-to-r from-neon-green to-neon-blue text-black px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                <i class="fas fa-camera-retro mr-2"></i> Launch AR Preview
+            </button>
+            <div class="mt-8 p-6 bg-gray-900 rounded-lg max-w-lg mx-auto ar-overlay">
+                <p class="text-sm text-gray-400">Available on compatible mobile devices. Simply scan the QR code below or click the button above from your phone.</p>
+                <div class="mt-4 flex justify-center">
+                    <img src="qr.png" alt="QR Code for AR App Download" class="w-32 h-32 bg-white p-2 rounded-lg"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="community" class="py-16 bg-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Join Our Gaming Community</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-800 rounded-xl p-6 text-center transition-all duration-300 hover:bg-gray-700">
+                    <div class="text-6xl text-neon-blue mb-4"><i class="fas fa-comments"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Forums & Discussions</h3>
+                    <p class="text-gray-400">Connect with other gamers, share tips, and discuss the latest titles and consoles.</p>
+                    <button class="mt-4 btn-neon px-4 py-2 rounded-full">Go to Forums</button>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 text-center transition-all duration-300 hover:bg-gray-700">
+                    <div class="text-6xl text-neon-pink mb-4"><i class="fas fa-newspaper"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Latest News & Reviews</h3>
+                    <p class="text-gray-400">Stay up-to-date with breaking news, in-depth reviews, and exclusive previews.</p>
+                    <button class="mt-4 btn-neon px-4 py-2 rounded-full">Read Articles</button>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 text-center transition-all duration-300 hover:bg-gray-700">
+                    <div class="text-6xl text-neon-green mb-4"><i class="fas fa-calendar-alt"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Events & Tournaments</h3>
+                    <p class="text-gray-400">Participate in community events, online tournaments, and win exclusive prizes!</p>
+                    <button class="mt-4 btn-neon px-4 py-2 rounded-full">See Events</button>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <h3 class="text-2xl font-bold mb-4">Follow Us on Social Media</h3>
+                <div class="flex justify-center space-x-6 text-4xl">
+                    <a href="#" class="text-neon-blue hover:scale-110 transition-transform"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-neon-pink hover:scale-110 transition-transform"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-neon-green hover:scale-110 transition-transform"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-neon-purple hover:scale-110 transition-transform"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="text-white hover:scale-110 transition-transform"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="gradient-bg py-12 border-t border-gray-800">
+        <div class="container mx-auto px-4 text-center md:text-left grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-2xl font-bold neon-text text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple pixel-font mb-4">NEXUS</h3>
+                <p class="text-gray-400 text-sm">Your ultimate destination for next-generation gaming consoles and accessories.</p>
+                <div class="flex space-x-4 mt-4 justify-center md:justify-start">
+                    <a href="#" class="text-neon-blue hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-neon-blue hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-neon-blue hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-neon-blue hover:text-white"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Shop</h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li><a href="#shop" class="hover:text-neon-blue">PlayStation</a></li>
+                    <li><a href="#shop" class="hover:text-neon-blue">Xbox</a></li>
+                    <li><a href="#shop" class="hover:text-neon-blue">Nintendo</a></li>
+                    <li><a href="#shop" class="hover:text-neon-blue">Handhelds</a></li>
+                    <li><a href="#bundles" class="hover:text-neon-blue">Bundles</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Support</h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li><a href="#" class="hover:text-neon-blue">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-neon-blue">FAQs</a></li>
+                    <li><a href="#" class="hover:text-neon-blue">Shipping & Returns</a></li>
+                    <li><a href="#" class="hover:text-neon-blue">Warranty Information</a></li>
+                    <li><a href="#" class="hover:text-neon-blue">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">My Account</h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li><a href="#" class="hover:text-neon-blue">Sign In / Register</a></li>
+                    <li><a href="#" class="hover:text-neon-blue">Order History</a></li>
+                    <li><a href="#" class="hover:text-neon-blue">Wishlist</a></li>
+                    <li><a href="#" class="hover:text-neon-blue">Cart</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+            &copy; 2025 Nexus Gaming. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Carousel functionality (existing code)
+        const carouselTrack = document.getElementById('carousel-track');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        let currentIndex = 0;
+
+        function updateCarousel() {
+            carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+            indicators.forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.add('bg-neon-blue');
+                    indicator.classList.remove('bg-gray-600');
+                } else {
+                    indicator.classList.add('bg-gray-600');
+                    indicator.classList.remove('bg-neon-blue');
+                }
+            });
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateCarousel();
+        });
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+
+        let autoSlideInterval = setInterval(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        }, 5000);
+
+        carouselTrack.parentElement.addEventListener('mouseenter', () => {
+            clearInterval(autoSlideInterval);
+        });
+        carouselTrack.parentElement.addEventListener('mouseleave', () => {
+            autoSlideInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateCarousel();
+            }, 5000);
+        });
+
+        updateCarousel(); // Initialize carousel
+
+
+        // --- New Functionality ---
+
+        // 1. Search Bar Toggle
+        const searchToggleBtn = document.getElementById('search-toggle-btn');
+        const searchBarContainer = document.getElementById('search-bar-container');
+
+        searchToggleBtn.addEventListener('click', () => {
+            searchBarContainer.classList.toggle('hidden');
+            searchBarContainer.querySelector('input').focus(); // Focus input when shown
+        });
+
+        // 2. Cart Functionality
+        let cart = []; // Stores items in the cart
+
+        const cartButton = document.getElementById('cart-button');
+        const cartModal = document.getElementById('cart-modal');
+        const closeCartModal = document.getElementById('close-cart-modal');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalSpan = document.getElementById('cart-total');
+        const cartCountSpan = document.getElementById('cart-count');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const checkoutButton = document.getElementById('checkout-button');
+
+        // Function to update cart display
+        function updateCartDisplay() {
+            cartItemsContainer.innerHTML = ''; // Clear current items
+            let total = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                checkoutButton.disabled = true;
+            } else {
+                emptyCartMessage.style.display = 'none';
+                checkoutButton.disabled = false;
+                cart.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'border-gray-700');
+                    itemElement.innerHTML = `
+                        <div>
+                            <p class="font-bold">${item.name}</p>
+                            <p class="text-gray-400 text-sm">$${item.price.toFixed(2)} x ${item.quantity}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-sm quantity-adjust-btn" data-index="${index}" data-action="decrease">-</button>
+                            <span class="w-6 text-center">${item.quantity}</span>
+                            <button class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-sm quantity-adjust-btn" data-index="${index}" data-action="increase">+</button>
+                            <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm remove-from-cart-btn" data-index="${index}">Remove</button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                    total += item.price * item.quantity;
+                });
+            }
+
+            cartTotalSpan.textContent = total.toFixed(2);
+            cartCountSpan.textContent = cart.length; // Count unique items, not total quantity
+        }
+
+        // Add to cart event listener
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const id = event.target.dataset.consoleId;
+                const name = event.target.dataset.consoleName;
+                const price = parseFloat(event.target.dataset.consolePrice);
+
+                const existingItem = cart.find(item => item.id === id);
+
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ id, name, price, quantity: 1 });
+                }
+                updateCartDisplay();
+                cartModal.style.display = 'flex'; // Open cart modal after adding
+            });
+        });
+
+        // Event listener for quantity adjustment and removal within cart modal
+        cartItemsContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-from-cart-btn')) {
+                const index = parseInt(event.target.dataset.index);
+                cart.splice(index, 1); // Remove item at index
+                updateCartDisplay();
+            } else if (event.target.classList.contains('quantity-adjust-btn')) {
+                const index = parseInt(event.target.dataset.index);
+                const action = event.target.dataset.action;
+
+                if (action === 'increase') {
+                    cart[index].quantity++;
+                } else if (action === 'decrease') {
+                    if (cart[index].quantity > 1) {
+                        cart[index].quantity--;
+                    } else {
+                        cart.splice(index, 1); // Remove if quantity goes to 0
+                    }
+                }
+                updateCartDisplay();
+            }
+        });
+
+
+        // Open cart modal
+        cartButton.addEventListener('click', () => {
+            cartModal.style.display = 'flex';
+            updateCartDisplay(); // Ensure cart is updated when opened
+        });
+
+        // Close cart modal
+        closeCartModal.addEventListener('click', () => {
+            cartModal.style.display = 'none';
+        });
+
+        // Close modal if click outside
+        window.addEventListener('click', (event) => {
+            if (event.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+            if (event.target === paymentModal) {
+                paymentModal.style.display = 'none';
+            }
+        });
+
+
+        // 3. Compare Consoles Functionality
+        const consoleData = {
+            ps5: {
+                name: "PlayStation 5",
+                price: "2999.99",
+                cpu: "8x Zen 2 Cores at 3.5GHz",
+                gpu: "10.3 TFLOPS RDNA 2",
+                storage: "825GB Custom SSD",
+                resolution: "4K @ 120Hz",
+                exclusives: "Spider-Man, God of War"
+            },
+            xboxsx: {
+                name: "Xbox Series X",
+                price: "1999.99",
+                cpu: "8x Zen 2 Cores at 3.8GHz",
+                gpu: "12 TFLOPS RDNA 2",
+                storage: "1TB Custom NVMe SSD",
+                resolution: "4K @ 120Hz",
+                exclusives: "Halo, Forza"
+            },
+            switch: {
+                name: "Nintendo Switch OLED",
+                price: "899.99",
+                cpu: "Custom Nvidia Tegra",
+                gpu: "~0.4 TFLOPS Maxwell",
+                storage: "64GB Internal Flash",
+                resolution: "1080p @ 60Hz (TV), 720p (Handheld)",
+                exclusives: "Zelda, Mario"
+            },
+            steamdeck: {
+                name: "Steam Deck OLED",
+                price: "$699.00",
+                cpu: "AMD Zen 2 4c/8t, 2.4-3.5GHz",
+                gpu: "8 RDNA 2 CUs, 1.6GHz",
+                storage: "512GB NVMe SSD",
+                resolution: "1280x800 (OLED)",
+                exclusives: "Steam Library (PC games)"
+            }
+        };
+
+        const compareSelects = [
+            document.getElementById('compare-select-1'),
+            document.getElementById('compare-select-2'),
+            document.getElementById('compare-select-3'),
+            document.getElementById('compare-select-4')
+        ];
+        const compareNowBtn = document.getElementById('compare-now-btn');
+        const comparisonTableBody = document.getElementById('comparison-table-body');
+        const comparisonTableHeader = document.querySelector('#compare thead tr');
+
+        function updateComparisonTable() {
+            const selectedConsoleIds = compareSelects.map(select => select.value).filter(id => id !== '');
+            const selectedConsoles = selectedConsoleIds.map(id => consoleData[id]);
+
+            // Clear previous table content
+            comparisonTableBody.innerHTML = '';
+            // Clear previous headers, keep the first 'Features' column
+            comparisonTableHeader.innerHTML = '<th class="p-4 text-left"></th>';
+
+            if (selectedConsoles.length === 0) {
+                // Restore default example if no consoles selected
+                const defaultConsoles = [consoleData.ps5, consoleData.xboxsx, consoleData.switch];
+                defaultConsoles.forEach(console => {
+                    const headerClass = {
+                        "PlayStation 5": "text-neon-blue",
+                        "Xbox Series X": "text-neon-green",
+                        "Nintendo Switch OLED": "text-neon-purple"
+                    }[console.name] || "";
+                    comparisonTableHeader.innerHTML += `<th class="p-4 text-center font-bold ${headerClass} border-l border-r border-gray-700">${console.name}</th>`;
+                });
+
+                // Manually add sample rows
+                const sampleRows = {
+                    "Price": ["$499.99", "$499.99", "$349.99"],
+                    "CPU": ["8x Zen 2 Cores at 3.5GHz", "8x Zen 2 Cores at 3.8GHz", "Custom Nvidia Tegra"],
+                    "GPU": ["10.3 TFLOPS", "12 TFLOPS", "~0.4 TFLOPS"],
+                    "Storage": ["825GB SSD", "1TB SSD", "64GB Flash"],
+                    "Max Resolution": ["4K @ 120Hz", "4K @ 120Hz", "1080p @ 60Hz"],
+                    "Exclusive Games": ["Spider-Man, God of War", "Halo, Forza", "Zelda, Mario"]
+                };
+
+                for (const feature in sampleRows) {
+                    const row = document.createElement('tr');
+                    row.innerHTML += `<td class="p-3 font-bold">${feature}</td>`;
+                    sampleRows[feature].forEach((value, index) => {
+                        const borderClass = index < sampleRows[feature].length - 1 ? 'border-l border-r border-gray-700' : '';
+                        row.innerHTML += `<td class="comparison-cell ${borderClass}">${value}</td>`;
+                    });
+                    comparisonTableBody.appendChild(row);
+                }
+
+                return;
+            }
+
+            // Add headers for selected consoles
+            selectedConsoles.forEach(console => {
+                const headerClass = {
+                    "PlayStation 5": "text-neon-blue",
+                    "Xbox Series X": "text-neon-green",
+                    "Nintendo Switch OLED": "text-neon-purple",
+                    "Steam Deck OLED": "text-neon-pink" // Assuming pink for Steam Deck
+                }[console.name] || "";
+                comparisonTableHeader.innerHTML += `<th class="p-4 text-center font-bold ${headerClass} border-l border-r border-gray-700">${console.name}</th>`;
+            });
+
+            // Define features to compare and their display names
+            const features = [
+                { key: 'price', name: 'Price' },
+                { key: 'cpu', name: 'CPU' },
+                { key: 'gpu', name: 'GPU' },
+                { key: 'storage', name: 'Storage' },
+                { key: 'resolution', name: 'Max Resolution' },
+                { key: 'exclusives', name: 'Exclusive Games' }
+            ];
+
+            features.forEach(feature => {
+                const row = document.createElement('tr');
+                row.innerHTML += `<td class="p-3 font-bold">${feature.name}</td>`; // Feature name column
+                selectedConsoles.forEach((console, index) => {
+                    const borderClass = index < selectedConsoles.length - 1 ? 'border-l border-r border-gray-700' : '';
+                    row.innerHTML += `<td class="comparison-cell ${borderClass}">${console[feature.key] || 'N/A'}</td>`;
+                });
+                comparisonTableBody.appendChild(row);
+            });
+        }
+
+        compareNowBtn.addEventListener('click', updateComparisonTable);
+        // Also update if select values change (optional, but good UX)
+        compareSelects.forEach(select => {
+            select.addEventListener('change', updateComparisonTable);
+        });
+
+        // Initialize table with default comparison
+        updateComparisonTable();
+
+
+        // 4. Payment Method Modals
+
+        const paymentModal = document.getElementById('payment-modal');
+        const closePaymentModal = document.getElementById('close-payment-modal');
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const confirmPaymentButton = document.getElementById('confirm-payment-button');
+
+        let selectedPaymentMethod = null;
+
+        checkoutButton.addEventListener('click', () => {
+            cartModal.style.display = 'none'; // Close cart modal
+            paymentModal.style.display = 'flex'; // Open payment modal
+            selectedPaymentMethod = null; // Reset selection
+            paymentOptions.forEach(option => option.classList.remove('selected'));
+            confirmPaymentButton.disabled = true;
+        });
+
+        closePaymentModal.addEventListener('click', () => {
+            paymentModal.style.display = 'none';
+        });
+
+        paymentOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                paymentOptions.forEach(opt => opt.classList.remove('selected')); // Remove from all
+                option.classList.add('selected'); // Add to selected
+                selectedPaymentMethod = option.dataset.method;
+                confirmPaymentButton.disabled = false; // Enable confirm button
+            });
+        });
+
+        confirmPaymentButton.addEventListener('click', () => {
+            if (selectedPaymentMethod) {
+                let message = `Payment successful via ${selectedPaymentMethod.replace('-', ' ').toUpperCase()}!`;
+                alert(message);
+                cart = []; // Clear cart after successful payment
+                updateCartDisplay();
+                paymentModal.style.display = 'none';
+            } else {
+                alert('Please select a payment method.');
+            }
+        });
+
+    </script>
+</body>
+</html>
